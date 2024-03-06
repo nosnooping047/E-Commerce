@@ -1,0 +1,139 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br" data-bs-theme="light">
+<head>
+    <!-- Meta tags -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Zeus Tech Informática & Smartphones</title>
+    
+    <!-- Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap">
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    
+    <!-- Font Awesome CSS -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script src="https://kit.fontawesome.com/d8fbb26c24.js" crossorigin="anonymous"></script>
+
+    {% block 'cabecalho' %} {% endblock %}
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="16x16"  href="{% static 'img/favicon-16x16.png' %}">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="theme-color" content="#ffffff">
+
+</head>
+
+<body>
+
+<header class="cabecalho">
+    <div class="container-personalizado marg" >
+        <a href="/SobreApp/sobre/" style="text-decoration: none;">
+            <!-- Logo -->
+            <div class="d-flex justify-content-center">
+            <img src="{% static 'img/zeus.png' %}" alt="ZEUS TECH" style="margin-bottom: 4px; margin-top: 40px; width: 100px; height: 100;">
+            </div>
+            <!--h1 style="margin-top: 10px; letter-spacing: 2px; font-size: 52px;" class="text-center logocab">Portal <span class="logocab400" style="color: rgb(255, 255, 255);">Zeus Tech</span></h1-->
+            <h5 style="margin-bottom: -8px; text-transform: uppercase; letter-spacing: 2px; color:#11111144; font-size: 26px; font-weight: 800;" class="text-center logocab">Informática & smartphones</h5>
+        </a>
+        <!-- Navbar -->
+        <nav class="navbar sticky-top navbar-expand-lg navbar-light text-white justify-content-center" style="max-width: 90%; margin: 0 auto;">
+            <div class="navbar-collapse text-center" id="navbarNav">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item {% if request.path == '/HomeApp/home/' %}active{% endif %}">
+                        <a class="nav-link css-z4m310 logocab" style="font-size: 16px; font-weight: 400;" href="/HomeApp/home/">Página Inicial<span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item {% if request.path == '/ProdutosApp/produtos/' %}active{% endif %}">
+                        <a class="nav-link css-z4m310 logocab" style="font-size: 16px; font-weight: 400;" href="/ProdutosApp/produtos/">Catálogo de Produtos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-block logocab" style="font-size: 16px; font-weight: 400; background-color: #FF1493; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);" href="/MonteSeuComputadorApp/monteseucomputador/" role="button">Configuração Customizada</a>
+                    </li>
+                    {% if user.is_authenticated %}    
+                               
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle css-z4m310 logocab" style="font-size: 16px; font-weight: 400;" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa-regular fa-user"></i> 
+                            {{ user.username }}
+                        </a>
+                        <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+                          <a class="dropdown-item" href="/UsuariosCadastroApp/logout/"><i class="fa-solid fa-right-from-bracket"></i> LOGOUT</a>
+                        </div>
+                      </li> 
+                    {% else %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle css-z4m310 logocab" style="font-size: 16px; font-weight: 400;" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa-regular fa-user"></i> 
+                             Login
+                        </a>
+                        <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+                          <a class="dropdown-item" href="/UsuariosCadastroApp/logar/"><i class="fa-solid fa-user"></i> LOGIN</a>
+                          <a class="dropdown-item" href="/UsuariosCadastroApp/cadastro/"><i class="fa-solid fa-user-plus"></i> CADASTRO</a>
+                        </div>
+                      </li>  
+                      {% endif %}
+                    {% if request.session.cart|length > 0 %}
+                    <li class="nav-item {% if request.path == '/ProdutosApp/carrinho/' %}active{% endif %}">
+                        <a href="{% url 'carrinho' %}" class="nav-link css-z4m310 logocab400" style=" margin-left: -10px;">
+                            <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+                            <span class="item-count logocab" style=" font-weight: 700;">{{ request.session.cart|length }}</span>
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </nav>
+    </div>
+</header>
+
+<main class="conteudo">
+    <!-- Conteúdo principal -->
+    <section class="container-personalizado_1 container-personalizado_1_blur">
+        {% block 'principal_1' %} {% endblock %}
+    </section>
+</main>
+
+<footer class="rodape">
+    <div class="footer-container">
+        <!-- Links sociais -->
+        <div class="p-2 text-white text-center">
+            <a class="nav-link" style="color: #111111; display: inline-block; margin-right: 10px; margin-top: 16px;" href="https://www.instagram.com"><i class="fa-brands fa-instagram"></i></a>
+            <a class="nav-link" style="color: #1111112d; display: inline-block; margin-right: 10px; margin-top: 16px;" ><i class="fa-brands fa-facebook-f"></i></a>
+            <a class="nav-link" style="color: #1111112d; display: inline-block; margin-right: 10px; margin-top: 16px;" ><i class="fa-brands fa-twitter"></i></a>
+        </div>
+        <!-- Descrição do rodapé -->
+        
+        <div class="container-personalizado text-center logocab">
+          <!--p style="color: #111111;  margin-bottom: -10px; font-size: 16px;">Inovação movida pela tecnologia. Este site foi habilmente desenvolvido por <span class="logocab400" style="color: #000000;">Anony</span>, seu parceiro confiável para soluções digitais de ponta.</p-->
+        </div>
+    </div>
+</footer>
+
+<!-- Bootstrap e outros scripts -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<!-- Script personalizado para ativar o popover -->
+<script>
+    $(function () {
+        $('[data-toggle="popover"]').popover({
+            trigger: 'hover'
+        });
+    });
+</script>
+
+<!-- Botão do WhatsApp -->
+<a href="https://api.whatsapp.com/send?phone=5511978367091" class="whatsapp-icon">
+  <i class="fab fa-whatsapp fa-2x"></i>
+</a>
+
+</body>
+</html>

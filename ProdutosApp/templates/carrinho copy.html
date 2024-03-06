@@ -1,0 +1,70 @@
+{% extends 'conteudo.html' %}
+{% load custom_filters %}
+{% load static %}
+{% block 'principal_1' %}
+
+{% load custom_filters %}
+
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-8">
+            <h2>Seu Carrinho</h2>
+            {% for produto, quantidade in produtos_no_carrinho %}
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h3 class="card-title">{{ produto.nome }}</h3>
+                        <p class="card-text">{{ produto.descricao }}</p>
+                        <p class="card-text"><strong>Quantidade:</strong> {{ quantidade }}</p>
+                        <p class="card-text"><strong>Preço unitário:</strong> R$ {{ produto.valor_venda }}</p>
+                        <p class="card-text"><strong>Preço total:</strong> R$ {{ produto.valor_venda|mul:quantidade }}</p>
+                        <form action="{% url 'carrinho' %}" method="post" class="d-inline">
+                            {% csrf_token %}
+                            <input type="hidden" name="produto_id" value="{{ produto.id }}">
+                            <input type="hidden" name="quantidade_atual" value="{{ quantidade }}">
+                            <button type="submit" name="remover_carrinho" class="btn btn-sm btn-warning">-</button>
+
+                            <input type="hidden" name="adicionar_carrinho" value="{{ produto.id }}">
+                            <button type="submit" class="btn btn-sm btn-success">+</button>
+                        </form>  
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="col-md-4">
+            <p><strong>Valor Total do Carrinho:</strong> R$ {{ valor_total }}</p>
+            <p><strong>Total de itens:</strong> {{ request.session.cart|length }}</p>
+            <h2>Checkout</h2>
+            <form id="checkout-form" action="{% url 'checkout' %}" method="POST">
+                {% csrf_token %}
+                <!--div class="form-group">
+                    <label for="full_name">Nome Completo:</label>
+                    <input type="text" id="full_name" name="full_name" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="address">Endereço:</label>
+                    <input type="text" id="address" name="address" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="city">Cidade:</label>
+                    <input type="text" id="city" name="city" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="zip_code">CEP:</label>
+                    <input type="text" id="zip_code" name="zip_code" class="form-control" required>
+                </div-->
+                <input type="hidden" name="valor_total" value="{{ valor_total }}">
+                <input type="hidden" name="total_itens" value="{{ request.session.cart|length }}">
+                <button type="submit" class="btn btn-success btn-block">Finalizar Pedido</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock 'principal_1' %}
