@@ -1,0 +1,195 @@
+
+{% extends 'conteudo.html' %}
+{% load custom_filters %}
+{% load static %}
+
+{% block 'cabecalho' %}
+<script src="https://sdk.mercadopago.com/js/v2"></script>
+<script>
+    const mp = new MercadoPago('TEST-2cfc894d-c981-40c3-939b-2b706c7b731d');
+</script>
+{% endblock %}
+{% block 'principal_1' %}
+
+
+       
+            <p><strong>Valor Total do Carrinho:</strong> R$ {{ valor_total }}</p>
+            <p><strong>Total de itens:</strong> {{ request.session.cart|length }}</p>
+            
+
+            <style>    
+            .form-group {
+                margin-bottom: 20px;
+            }
+            .container {
+                height: 38px;
+                display: inline-block;
+                border: 1px solid #ced4da;
+                border-radius: 0.25rem;
+                padding: 6px 12px;
+                width: 100%;
+                font-size: 1rem;
+                line-height: 1.5;
+                color: #495057;
+                background-color: #fff;
+                background-clip: padding-box;
+                transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+            }
+            </style>
+
+            
+                <div id="url-data" data-url="{% url 'process_payment' %}"></div>
+                <form id="form-checkout">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <div id="form-checkout__cardNumber" class="container"></div>
+                    </div>
+                    <div class="form-group">
+                        <div id="form-checkout__expirationDate" class="container"></div>
+                    </div>
+                    <div class="form-group">
+                        <div id="form-checkout__securityCode" class="container"></div>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="form-checkout__cardholderName" placeholder="Nome do Titular do Cartão">
+                    </div>
+                    <div class="form-group">
+                        <select class="form-control" id="form-checkout__issuer">
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <select class="form-control" id="form-checkout__installments">
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <select class="form-control" id="form-checkout__identificationType">
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="form-checkout__identificationNumber" placeholder="Número de Identificação">
+                    </div>
+                    <div class="form-group">
+                        <input type="email" class="form-control" id="form-checkout__cardholderEmail" placeholder="E-mail do Titular do Cartão">
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="form-checkout__submit">Pagar</button>
+                    <progress value="0" class="progress-bar">Carregando...</progress>
+                </form>
+          
+        
+
+
+<form action="{% url 'statusDePagamento' %}" method="post">{% csrf_token %} 
+  <button type="submit">CHECAR PAGAMENTO!</button>
+</form>
+
+
+<script>
+    const urlElement = document.getElementById('url-data');
+    const urlCarrinho = urlElement.getAttribute('data-url');
+    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    var valorTotal = parseFloat("{{ valor_total }}").toFixed(1);
+    console.log("Valor Total:", valorTotal);
+    const cardForm = mp.cardForm({
+      amount: valorTotal,
+      iframe: true,
+      form: {
+        id: "form-checkout",
+        cardNumber: {
+          id: "form-checkout__cardNumber",
+          placeholder: "Número do cartão",
+        },
+        expirationDate: {
+          id: "form-checkout__expirationDate",
+          placeholder: "MM/YY",
+        },
+        securityCode: {
+          id: "form-checkout__securityCode",
+          placeholder: "Código de segurança",
+        },
+        cardholderName: {
+          id: "form-checkout__cardholderName",
+          placeholder: "Titular do cartão",
+        },
+        issuer: {
+          id: "form-checkout__issuer",
+          placeholder: "Banco emissor",
+        },
+        installments: {
+          id: "form-checkout__installments",
+          placeholder: "Parcelas",
+        },        
+        identificationType: {
+          id: "form-checkout__identificationType",
+          placeholder: "Tipo de documento",
+        },
+        identificationNumber: {
+          id: "form-checkout__identificationNumber",
+          placeholder: "Número do documento",
+        },
+        cardholderEmail: {
+          id: "form-checkout__cardholderEmail",
+          placeholder: "E-mail",
+        },
+      },
+      callbacks: {
+        onFormMounted: error => {
+          if (error) return console.warn("Form Mounted handling error: ", error);
+          console.log("Form mounted");
+        },
+        onSubmit: event => {
+          event.preventDefault();
+
+          const {
+            paymentMethodId: payment_method_id,
+            issuerId: issuer_id,
+            cardholderEmail: email,
+            amount,
+            token,
+            installments,
+            identificationNumber,
+            identificationType,
+          } = cardForm.getCardFormData();
+
+          fetch(urlCarrinho, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "X-CSRFToken": csrftoken
+            },
+            body: JSON.stringify({
+              token,
+              issuer_id,
+              payment_method_id,
+              transaction_amount: Number(amount),
+              installments: Number(installments),
+              description: "Descrição do produto",
+              payer: {
+                email,
+                identification: {
+                  type: identificationType,
+                  number: identificationNumber,
+                },
+              },
+            }),
+          });
+        },
+        onFetching: (resource) => {
+          console.log("Fetching resource: ", resource);
+
+          // Animate progress bar
+          const progressBar = document.querySelector(".progress-bar");
+          progressBar.removeAttribute("value");
+
+          return () => {
+            progressBar.setAttribute("value", "0");
+          };
+        }
+      },
+    });
+</script>
+
+
+  
+    
+
+{% endblock %}

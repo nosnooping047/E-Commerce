@@ -4,24 +4,19 @@
 {% load static %}
 
 {% block 'cabecalho' %}
-  
-{% endblock %}
-{% block 'principal_1' %}
-
-
 <script src="https://sdk.mercadopago.com/js/v2"></script>
 <script>
     const mp = new MercadoPago('TEST-2cfc894d-c981-40c3-939b-2b706c7b731d');
 </script>
-<div class="container mt-5">
+{% endblock %}
+{% block 'principal_1' %}
+
     <div class="row">
-        <div class="col-md-5">
-            <h2>Seu Carrinho</h2>
+        <h2 style="margin-left: 3%;">Seu Carrinho</h2>
+        <div class="col-md-8">
             {% for produto, quantidade in produtos_no_carrinho %}
                 <div class="card mb-3">
                     <div class="card-body">
-
-                        
                         <p class="card-text">{{ produto.descricao }}</p>
                         <p class="card-text"><strong>Quantidade:</strong> {{ quantidade }}</p>
                         <p class="card-text"><strong>Preço unitário:</strong> R$ {{ produto.valor_venda }}</p>
@@ -39,157 +34,15 @@
                 </div>
             {% endfor %}
         </div>
-        <div class="col-md-7">
+    
+        <div class="col-md-4">
             <p><strong>Valor Total do Carrinho:</strong> R$ {{ valor_total }}</p>
             <p><strong>Total de itens:</strong> {{ request.session.cart|length }}</p>
             
-
-            <style>
-
-          
-              .container {
-                #form-checkout {
-                display: flex;
-                flex-direction: column;
-                max-width: 600px;
-              }
-
-              .container {
-                height: 18px;
-                display: inline-block;
-                border: 1px solid rgb(118, 118, 118);
-                border-radius: 2px;
-                padding: 1px 2px;
-              }
-              }
-            </style>
-            <div id="url-data" data-url="{% url 'process_payment' %}"></div>
-            <form id="form-checkout">{% csrf_token %}
-              <div id="form-checkout__cardNumber" class="container"></div>
-              <div id="form-checkout__expirationDate" class="container"></div>
-              <div id="form-checkout__securityCode" class="container"></div>
-              <input type="text" id="form-checkout__cardholderName" />
-              <select id="form-checkout__issuer"></select>
-              <select id="form-checkout__installments"></select>
-              <select id="form-checkout__identificationType"></select>
-              <input type="text" id="form-checkout__identificationNumber" />
-              <input type="email" id="form-checkout__cardholderEmail" />
-          
-              <button type="submit" id="form-checkout__submit">Pagar</button>
-              <progress value="0" class="progress-bar">Carregando...</progress>
+            <form action="{% url 'pagamento' %}" method="post">{% csrf_token %} 
+                <button type="submit" class="btn btn-secondary">IR PARA O PAGAMENTO</button>
             </form>
         </div>
     </div>
-</div>
-
-
-
-<script>
-    const urlElement = document.getElementById('url-data');
-    const urlCarrinho = urlElement.getAttribute('data-url');
-    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-
-    const cardForm = mp.cardForm({
-      amount: "100.5",
-      iframe: true,
-      form: {
-        id: "form-checkout",
-        cardNumber: {
-          id: "form-checkout__cardNumber",
-          placeholder: "Número do cartão",
-        },
-        expirationDate: {
-          id: "form-checkout__expirationDate",
-          placeholder: "MM/YY",
-        },
-        securityCode: {
-          id: "form-checkout__securityCode",
-          placeholder: "Código de segurança",
-        },
-        cardholderName: {
-          id: "form-checkout__cardholderName",
-          placeholder: "Titular do cartão",
-        },
-        issuer: {
-          id: "form-checkout__issuer",
-          placeholder: "Banco emissor",
-        },
-        installments: {
-          id: "form-checkout__installments",
-          placeholder: "Parcelas",
-        },        
-        identificationType: {
-          id: "form-checkout__identificationType",
-          placeholder: "Tipo de documento",
-        },
-        identificationNumber: {
-          id: "form-checkout__identificationNumber",
-          placeholder: "Número do documento",
-        },
-        cardholderEmail: {
-          id: "form-checkout__cardholderEmail",
-          placeholder: "E-mail",
-        },
-      },
-      callbacks: {
-        onFormMounted: error => {
-          if (error) return console.warn("Form Mounted handling error: ", error);
-          console.log("Form mounted");
-        },
-        onSubmit: event => {
-          event.preventDefault();
-
-          const {
-            paymentMethodId: payment_method_id,
-            issuerId: issuer_id,
-            cardholderEmail: email,
-            amount,
-            token,
-            installments,
-            identificationNumber,
-            identificationType,
-          } = cardForm.getCardFormData();
-
-          fetch(urlCarrinho, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              "X-CSRFToken": csrftoken
-            },
-            body: JSON.stringify({
-              token,
-              issuer_id,
-              payment_method_id,
-              transaction_amount: Number(amount),
-              installments: Number(installments),
-              description: "Descrição do produto",
-              payer: {
-                email,
-                identification: {
-                  type: identificationType,
-                  number: identificationNumber,
-                },
-              },
-            }),
-          });
-        },
-        onFetching: (resource) => {
-          console.log("Fetching resource: ", resource);
-
-          // Animate progress bar
-          const progressBar = document.querySelector(".progress-bar");
-          progressBar.removeAttribute("value");
-
-          return () => {
-            progressBar.setAttribute("value", "0");
-          };
-        }
-      },
-    });
-</script>
-
-
-  
-    
 
 {% endblock %}

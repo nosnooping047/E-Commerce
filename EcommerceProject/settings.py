@@ -43,6 +43,10 @@ INSTALLED_APPS = [
     'HomeApp',
     'SobreApp',
     'MonteSeuComputadorApp',
+
+    # apps de terceiros
+    # 'notifications',
+   
 ]
 
 MIDDLEWARE = [

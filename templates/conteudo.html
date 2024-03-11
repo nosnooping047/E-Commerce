@@ -46,15 +46,15 @@
         <nav class="navbar sticky-top navbar-expand-lg navbar-light text-white justify-content-center" style="max-width: 90%; margin: 0 auto;">
             <div class="navbar-collapse text-center" id="navbarNav">
                 <ul class="navbar-nav mx-auto">
-                    <li class="nav-item {% if request.path == '/HomeApp/home/' %}active{% endif %}">
+                    <!--li class="nav-item {% if request.path == '/HomeApp/home/' %}active{% endif %}">
                         <a class="nav-link css-z4m310 logocab" style="font-size: 16px; font-weight: 400;" href="/HomeApp/home/">Página Inicial<span class="sr-only">(current)</span></a>
-                    </li>
+                    </li-->
                     <li class="nav-item {% if request.path == '/ProdutosApp/produtos/' %}active{% endif %}">
                         <a class="nav-link css-z4m310 logocab" style="font-size: 16px; font-weight: 400;" href="/ProdutosApp/produtos/">Catálogo de Produtos</a>
                     </li>
-                    <li class="nav-item">
+                    <!--li class="nav-item">
                         <a class="btn btn-block logocab" style="font-size: 16px; font-weight: 400; background-color: #FF1493; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);" href="/MonteSeuComputadorApp/monteseucomputador/" role="button">Configuração Customizada</a>
-                    </li>
+                    </li-->
                     {% if user.is_authenticated %}    
                                
                     <li class="nav-item dropdown">
@@ -62,7 +62,8 @@
                             {{ user.username }}
                         </a>
                         <div class="dropdown-menu " aria-labelledby="navbarDropdown">
-                          <a class="dropdown-item" href="/UsuariosCadastroApp/logout/"><i class="fa-solid fa-right-from-bracket"></i> LOGOUT</a>
+                          <a class="dropdown-item" href="/UsuariosCadastroApp/minha_conta/"><i class="fa-solid fa-right-from-bracket"></i> Minha Conta</a>
+                          <a class="dropdown-item" href="/UsuariosCadastroApp/logout/"><i class="fa-solid fa-right-from-bracket"></i> Sair</a>
                         </div>
                       </li> 
                     {% else %}
