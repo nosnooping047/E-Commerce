@@ -132,4 +132,5 @@ def minha_conta(request):
         # Se a requisição não for POST, renderize o template com os dados do perfil do usuário
         return render(request, 'minha_conta.html', {'perfil_usuario': perfil_usuario})
 
-
+def minhas_compras(request):
+    return render(request, 'minhas_compras.html')

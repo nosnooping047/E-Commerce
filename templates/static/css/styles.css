@@ -36,14 +36,15 @@
 /* Remover contorno azul ao clicar */
 .search_input:focus,
 .search_input:active {
-    border-color: #ced4da; /* Cor da borda quando focado */
+  
+    border: solid 1px #11111121;
     box-shadow: none; /* Remove sombra ao clicar */
     outline: none; /* Remove contorno ao clicar */
 }
 
 .search_input1:focus,
 .search_input1:active {
-    border-color: #ced4da; /* Cor da borda quando focado */
+    border-color: #11111121; /* Cor da borda quando focado */
     box-shadow: none; /* Remove sombra ao clicar */
     outline: none; /* Remove contorno ao clicar */
 }
@@ -53,7 +54,7 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 
-    color: #ffffff;
+    color: #111111;
     border: 0;
     outline: none; /* Remove o contorno ao focar */
     background: none;
@@ -63,7 +64,7 @@
 
 .search_button {
     border-radius: 0 20px 20px 0; /* Bordas arredondadas apenas no canto direito */
-    color: #ffffff;
+    color: #111111;
     border: none;
     cursor: pointer;
     outline: none;
@@ -73,10 +74,10 @@
 
 .search_button:hover,
 .search_button:focus {
-    background-color: #FF0072 /* Altera a cor de fundo ao passar o mouse ou focar */
+    background-color: #111111 /* Altera a cor de fundo ao passar o mouse ou focar */
 }
 ::placeholder {
-    color: #ffffff8c !important;
+    color: #1111118c !important;
 }
 
 @media (max-width: 576px) {
@@ -101,7 +102,7 @@
                 color: #FFFFFF;      
                 }
 body {
-        background-image: url('../img/back.png');
+        background-image: #ffffff;/*url('../img/back.png');*/
         background-size: cover;
         background-repeat: no-repeat;
         background-attachment: fixed; 
@@ -192,36 +193,39 @@ body {
         -moz-osx-font-smoothing: grayscale;
         margin-left: -1px;
         line-height: 1.25;
-        color: #ffffff;
-        background-color: #1111112d;
-        border-color: #1111112d;
+        color: #111111;
+        background-color: #11111100;
+        border-color: #11111100;
+        font-size: 22px;
     }
 
     .custom-pagination .page-link:hover {
-        color: #ffffff;
+        color: #11111183;
+        font-size: 22px;
         text-decoration: none;
         background-color: #21252900;
-        border-color: #1111112d;
+        border-color: #11111100;
     }
 
     .custom-pagination .page-item.active .page-link {
         z-index: 3;
-        color: #ffffff8c;
+        font-size: 22px;
+        color: #1111118c;
         background-color: #21252900;
 
     }
 
     .custom-pagination .page-item.disabled .page-link {
-        color: #ffffff;
+        color: #111111;
         pointer-events: none;
         cursor: auto;
-        background-color: #1111112d;
-        border-color: #1111112d;
+        background-color: #11111100;
+        border-color: #11111100;
     }
 
     .custom-pagination .page-link:focus {
         outline: 0;
-        box-shadow: 0 0 0 0.2rem #1111112d;
+        box-shadow: 0 0 0 0.2rem #11111100;
     }
 
     .clamp-lines {
@@ -279,24 +283,25 @@ border: 1px solid #EA229962;
 
 
     .css-z4m310 {
-        color: #ffffff;
+        color: #111111;
         }
 
 .css-z4m310:hover {
 /*border-bottom: 2px solid #ffffff8c;
 margin-bottom: -20px;*/
 
-color: #ffffff8c; /* Cor do texto para o item ativo */
+color: #1111118c; /* Cor do texto para o item ativo */
 transition: all 0.2s ease 0s;
 }
 .css-z4m310:focus,
 .css-z4m310:focus-within {
-    color: #ffffff;
+    color: #111111;
+    
 }
 
 
 .nav-item.active .nav-link {
-    color: #dfdbdb; /* Cor do texto para o item ativo */
+    color: #1111118c; /* Cor do texto para o item ativo */
 }
 
 .navbar-nav .nav-item {
@@ -308,14 +313,16 @@ filter: grayscale(100%);
 
 
 .item-count {
-font-family: 'Telegraf-Font', sans-serif;
-background-color: #ffffff30; /* cor de fundo do número */
-color: #fff; /* cor do texto do número */
-border-radius: 8px; /* ajuste conforme necessário para tornar a borda mais redonda */
-padding: 1px 4px; /* ajuste conforme necessário para reduzir o tamanho do padding */
-position: absolute; /* posição absoluta para que possamos posicionar */
-font-size: 10px; /* ajuste o tamanho da fonte conforme necessário */
-margin-left: 2px; 
+    width: 20px; /* Largura do elemento */
+    height: 20px; /* Mesma altura para tornar o elemento circular */
+    font-family: 'Telegraf-Font', sans-serif;
+    background-color: #FD019D; /* cor de fundo do número */
+    color: #ffffff; /* cor do texto do número */
+    border-radius: 50%; /* Tornar o elemento circular */
+    padding: 2px 4px; /* ajuste conforme necessário para reduzir o tamanho do padding */
+    position: absolute; /* posição absoluta para que possamos posicionar */
+    font-size: 12px; /* ajuste o tamanho da fonte conforme necessário */
+    margin-left: -14px;
 }
 
 

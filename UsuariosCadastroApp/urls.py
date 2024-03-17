@@ -6,6 +6,7 @@ urlpatterns = [
     path('logar/', views.logar, name="login"),
     path('logout/', views.logout, name="logout"),
     path('minha_conta/', views.minha_conta, name='minha_conta'),
+    path('minhas_compras/', views.minhas_compras, name='minhas_compras'),
     path('buscar_endereco/', views.buscar_endereco, name='buscar_endereco'),
 
 ]

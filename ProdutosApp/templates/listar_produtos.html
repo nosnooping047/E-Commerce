@@ -4,16 +4,7 @@
 {% block 'principal_1' %}
 {% if tem_produtos %}
 
-<form action="{% url 'produtos' %}" method="POST">{% csrf_token %}
-    <div class="container">
-        <div class="d-flex justify-content-center">
-            <div class="input-group searchbar">
-                <input class="search_input form-control" type="text" name="buscarproduto" placeholder="Buscar produtos...">
-                <button type="submit" class="search_button btn btn-dark"><i class="fas fa-search"></i></button>
-            </div>
-        </div>
-    </div>
-</form>
+
     <div class="row row-cols-1 row-cols-sm-1 row-cols-md-1 row-cols-lg-2 row-cols-xl-3">
         {% for produto in produtos %}
         <form action="{% url 'produtos' %}" method="post">{% csrf_token %} 
@@ -24,10 +15,10 @@
                     </div>                       
                     <div class=" card-title-hover">
                         <h2 class="card-title h5 h-md-4 clamp-lines logocab" style="font-size: 20px; margin: 20px; color: #111111;" data-content="{{ produto.nome }}" data-toggle="focus" title="{{ produto.nome }}">{{ produto.nome }}</h2>
-                        <h3 class="logocab" style="font-size: 20px; margin: 20px; color: #18B661;"><b>R$ {{ produto.valor_venda|formatar_moeda }}</b></h3>
+                        <h3 class="logocab" style="font-size: 20px; margin: 20px; color: #FD019D;"><b>R$ {{ produto.valor_venda|formatar_moeda }}</b></h3>
                     </div>
                     <input type="hidden" name="produto_id" value="{{ produto.id }}">
-                    <button type="submit" class="btn btn-lg btn-block font_pega" style="margin-left: 2%; margin-right: 2%; margin-bottom: 1%; background-color: #fa064300; border-color: #1111112d;" name="adicionar_carrinho"><i style="color: #1111112d;" class="fa-solid fa-cart-shopping"></i></button>
+                    <button type="submit" class="btn btn-lg btn-block font_pega" style="margin-left: 2%; margin-right: 2%; margin-bottom: 1%; background-color: #FD019D; border-color: #FD019D2d;" name="adicionar_carrinho"><i style="color: #ffffff;" class="fa-solid fa-cart-shopping"></i></button>
                 </div>
             </div>
         </form>
@@ -35,7 +26,7 @@
     </div>
     {% if tem_produtos > 10 %}
     <nav aria-label="Page navigation">
-        <ul class="pagination custom-pagination justify-content-center">
+        <ul class="pagination custom-pagination justify-content-end">
             {% if produtos.has_previous %}
                 <li class="page-item">
                     <a class="page-link" href="?page=1" aria-label="First">

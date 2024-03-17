@@ -58,7 +58,9 @@
     <button type="submit" class="btn btn-primary">Salvar</button>
 </form>
 
-
+<script>
+    var csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+</script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 $(document).ready(function(){
@@ -71,6 +73,9 @@ $(document).ready(function(){
                 type: 'GET',
                 data: {'cep': cep, 'ajax': true}, // Adiciona o parâmetro 'ajax'
                 dataType: 'json',
+                headers: {
+                    'X-CSRFToken': csrftoken // Inclui o token CSRF no cabeçalho da requisição
+                },
                 success: function(data){
                     $('#rua').val(data.logradouro);
                     $('#bairro').val(data.bairro);
