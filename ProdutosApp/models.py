@@ -45,6 +45,12 @@ class Produto(models.Model):
     # Novos campos adicionados
     marca = models.CharField(max_length=100, verbose_name=_("Marca"))
     modelo = models.CharField(max_length=100, verbose_name=_("Modelo"))
+
+    largura = models.CharField(max_length=100, verbose_name=_("largura"))
+    altura = models.CharField(max_length=100, verbose_name=_("altura"))
+    comprimento = models.CharField(max_length=100, verbose_name=_("comprimento"))
+    peso = models.CharField(max_length=100, verbose_name=_("peso"))
+
     disponivel = models.BooleanField(default=True, verbose_name=_("Disponível"))
     quantidade_disponivel = models.PositiveIntegerField(default=0, verbose_name=_("Quantidade Disponível"))
     data_lancamento = models.DateField(verbose_name=_("Data de Lançamento"))
@@ -60,3 +66,25 @@ class Produto(models.Model):
 
     def __str__(self):
         return self.nome
+
+from django.db import models
+from django.utils.translation import gettext_lazy as _
+from django.contrib.auth.models import User
+
+class Compra(models.Model):
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name=_("Usuário"))
+    produto = models.ForeignKey('Produto', on_delete=models.CASCADE, verbose_name=_("Produto"))
+    quantidade = models.PositiveIntegerField(default=1, verbose_name=_("Quantidade"))
+    valor_total = models.DecimalField(max_digits=10, decimal_places=2, verbose_name=_("Valor Total"))
+    data_compra = models.DateTimeField(auto_now_add=True, verbose_name=_("Data da Compra"))
+    status = models.CharField(max_length=100, verbose_name=_("Status"))
+    frete = models.DecimalField(max_digits=10, decimal_places=2, verbose_name=_("Frete"), null=True, blank=True)
+    codigo_rastreio = models.CharField(max_length=100, verbose_name=_("Código de Rastreio"), null=True, blank=True)
+    id_para_rastreio = models.CharField(max_length=100, verbose_name=_("Id"))
+
+    def __str__(self):
+        return f"{self.usuario.username} - {self.produto.nome}"
+
+    class Meta:
+        verbose_name = _("Compra")
+        verbose_name_plural = _("Compras")

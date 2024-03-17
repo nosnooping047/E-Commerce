@@ -1,0 +1,99 @@
+{% extends 'conteudo.html' %}
+{% load custom_filters %}
+{% load static %}
+
+{% block 'cabecalho' %}
+<style>
+    .produto-imagem {
+        max-width: 100%;
+        height: auto;
+    }
+
+    .produto-info {
+        background-color: #f8f9fa;
+        padding: 20px;
+        border-radius: 10px;
+    }
+
+    .produto-info h2 {
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+
+    .produto-info p {
+        margin-bottom: 10px;
+    }
+
+    .produto-info strong {
+        font-weight: bold;
+    }
+
+    .botao-comprar {
+        background-color: #007bff;
+        border-color: #007bff;
+        color: #fff;
+        padding: 10px 20px;
+        font-size: 18px;
+        border-radius: 5px;
+        margin-right: 10px;
+    }
+
+    .botao-comprar:hover {
+        background-color: #0056b3;
+        border-color: #0056b3;
+    }
+
+    .botao-carrinho {
+        background-color: #28a745;
+        border-color: #28a745;
+        color: #fff;
+        padding: 10px 20px;
+        font-size: 18px;
+        border-radius: 5px;
+    }
+
+    .botao-carrinho:hover {
+        background-color: #218838;
+        border-color: #218838;
+    }
+</style>
+{% endblock %}
+
+{% block 'principal_1' %}
+
+<div class="row">
+    <!-- Imagem do Produto -->
+
+    <!-- Detalhes do Produto -->
+    <div class="col-md-6 produto-info">
+        <img src="{{ produto.imagem.url|add:' '|cut:'templates/' }}" alt="{{ produto.nome }}"
+            class="img-fluid produto-imagem">
+        <h2>{{ produto.nome }}</h2>
+        <p><strong>Marca:</strong> {{ produto.marca }}</p>
+        <p><strong>Modelo:</strong> {{ produto.modelo }}</p>
+        <p><strong>Descrição:</strong> {{ produto.descricao }}</p>
+        <p><strong>Dimensões:</strong> {{ produto.largura }} x {{ produto.altura }} x {{ produto.comprimento }}</p>
+        <p><strong>Peso:</strong> {{ produto.peso }}</p>
+        <p><strong>Valor de Venda:</strong> R$ {{ produto.valor_venda }}</p>
+        <p><strong>Disponível:</strong> {% if produto.disponivel %} Sim {% else %} Não {% endif %}</p>
+        <p><strong>Quantidade Disponível:</strong> {{ produto.quantidade_disponivel }}</p>
+        <p><strong>Data de Lançamento:</strong> {{ produto.data_lancamento }}</p>
+        <!-- Botões de Compra e Adicionar ao Carrinho -->
+
+        <div class="d-flex justify-content-center">
+            <form action="{% url 'carrinho' %}" method="post">{% csrf_token %}
+                <input type="hidden" name="adicionar_carrinho" value="{{ produto.id }}">
+                <button type="submit" name="submit_button1"
+                    class="btn btn-primary btn-shadow btn-block">Comprar</button>
+            </form>
+
+            <form action="{% url 'carrinho' %}" style="margin-left: 2px;" method="post" class="d-inline">{% csrf_token
+                %}
+                <input type="hidden" name="adicionar_carrinho" value="{{ produto.id }}">
+                <button type="submit" class="btn btn-primary btn-shadow btn-block">Adicionar ao Carrinho</button>
+                <form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends 'conteudo.html' %}
+{% load static %}
+{% block 'cabecalho' %}
+    
+{% endblock %}
+{% block 'principal_1' %}
+
+<h1 class="mb-4">Minhas Compras</h1>
+<div class="row">
+    <div class="col-md-12">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Produto</th>
+                        <th scope="col">Quantidade</th>
+                        <th scope="col">Valor Total</th>
+                        <th scope="col">Data da Compra</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Frete</th>
+                        <th scope="col">Código de Rastreio</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for compra in compras %}
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td>{{ compra.produto.nome }}</td>
+                        <td>{{ compra.quantidade }}</td>
+                        <td>R$ {{ compra.valor_total }}</td>
+                        <td>{{ compra.data_compra|date:"d/m/Y H:i:s" }}</td>
+                        <td>{{ compra.status }}</td>
+                        <td>{{ compra.frete }}</td>
+                        <td>{{ compra.codigo_rastreio }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock 'principal_1' %}

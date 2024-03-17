@@ -1,4 +1,3 @@
-
 {% extends 'conteudo.html' %}
 {% load custom_filters %}
 {% load static %}
@@ -8,41 +7,243 @@
 <script>
     const mp = new MercadoPago('TEST-2cfc894d-c981-40c3-939b-2b706c7b731d');
 </script>
+<style>
+
+</style>
 {% endblock %}
 {% block 'principal_1' %}
+<script>
+    var csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+</script>
 
-    <div class="row">
-        <h2 style="margin-left: 3%;">Seu Carrinho</h2>
-        <div class="col-md-8">
-            {% for produto, quantidade in produtos_no_carrinho %}
+
+<div class="row">
+    <div class="col-md-12">
+        <h2 class="text-center mb-4">Seu Carrinho</h2>
+        <div class="row">
+            <div class="col-md-8">
+                {% for produto, quantidade in produtos_no_carrinho %}
                 <div class="card mb-3">
                     <div class="card-body">
                         <p class="card-text">{{ produto.descricao }}</p>
                         <p class="card-text"><strong>Quantidade:</strong> {{ quantidade }}</p>
                         <p class="card-text"><strong>Preço unitário:</strong> R$ {{ produto.valor_venda }}</p>
-                        <p class="card-text"><strong>Preço total:</strong> R$ {{ produto.valor_venda|mul:quantidade }}</p>
+                        <p class="card-text"><strong>Preço total:</strong> R$ {{ produto.valor_venda|mul:quantidade }}
+                        </p>
                         <form action="{% url 'carrinho' %}" method="post" class="d-inline">
                             {% csrf_token %}
                             <input type="hidden" name="produto_id" value="{{ produto.id }}">
                             <input type="hidden" name="quantidade_atual" value="{{ quantidade }}">
-                            <button type="submit" name="remover_carrinho" class="btn btn-sm btn-warning">-</button>
+                            <button type="submit" name="remover_carrinho" class="btn btn-sm btn-warning"
+                                id="btn-pagamento1" disabled>-</button>
 
                             <input type="hidden" name="adicionar_carrinho" value="{{ produto.id }}">
-                            <button type="submit" class="btn btn-sm btn-success">+</button>
-                        </form>  
+                            <button type="submit" class="btn btn-sm btn-success" id="btn-pagamento2" disabled>+</button>
+                        </form>
                     </div>
                 </div>
-            {% endfor %}
-        </div>
-    
-        <div class="col-md-4">
-            <p><strong>Valor Total do Carrinho:</strong> R$ {{ valor_total }}</p>
-            <p><strong>Total de itens:</strong> {{ request.session.cart|length }}</p>
-            
-            <form action="{% url 'pagamento' %}" method="post">{% csrf_token %} 
-                <button type="submit" class="btn btn-secondary">IR PARA O PAGAMENTO</button>
-            </form>
+                {% endfor %}
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Resumo do Pedido</h5>
+                        <p class="card-text">Valor dos Produtos: <strong>R$ <span id="valor_total_carrinho">{{ valor_total }}</span></strong></p>
+                        {% for produto, quantidade in produtos_no_carrinho %}
+                        <form action="{% url 'carrinho' %}" method="post">{% csrf_token %}
+                            <input type="hidden" name="limpar_carrinho" value="{{ produto.id }}">
+                            <button type="submit" class="btn btn-danger btn-block mb-3 limpar-carrinho"
+                                id="btn-pagamento3" disabled>Limpar Carrinho</button>
+                        </form>
+                        {% endfor %}
+                        <form action="{% url 'pagamento' %}" method="post" id="form-pagamento">{% csrf_token %}
+                            {% if not request.user.is_authenticated %}
+                            <p>Você precisa fazer login para prosseguir com o pagamento. <a
+                                    href="{% url 'login' %}?proximo=carrinho" class="btn btn-primary">Fazer Login</a>
+                            </p>
+                            {% endif %}
+
+                            {% if not perfil_usuario.rua or not perfil_usuario.numero or not perfil_usuario.bairro or not perfil_usuario.cidade or not perfil_usuario.estado or not perfil_usuario.cep %}
+
+                            <p>Alguns dados do endereço estão faltando. <a href="{% url 'minha_conta' %}"
+                                    class="btn btn-primary">Corrigir Endereço</a></p>
+                            {% else %}
+                            <p>Endereço de entrega: <strong>{{ perfil_usuario.rua }}, {{ perfil_usuario.numero }}, {{ perfil_usuario.bairro }}, {{ perfil_usuario.cidade }}, {{ perfil_usuario.estado }}</strong></p>
+                            <div class="container">
+                                <div id="delivery-options" class="row"></div>
+                            </div>
+                            <br>
+                            <p style="color: black;" id="valor-entrega"></p>
+                            <button type="submit" class="btn btn-primary btn-block" id="btn-pagamento" disabled>
+                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                IR PARA O PAGAMENTO
+                            </button>
+                            {% endif %}
+                            
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+</div>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    var xhr = null; // Referência para a solicitação AJAX atual
+    var xhr1 = null; // Referência para a solicitação AJAX atual
+    var csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+
+    $(document).ready(function () {
+        var cepValido = false;
+        function validarCEP(cep) {
+            cep = cep.replace(/\D/g, '');
+            return cep.length === 8;
+        }
+        function atualizarValorTotalCarrinho(valorFrete) {
+            var valorTotalCarrinho = valorFrete;
+            $('#valor_total_carrinho').text(valorTotalCarrinho.toFixed(2));
+            $('#valor_frete').text(valorTotalCarrinho.toFixed(2));
+            $('#btn-pagamento').prop('disabled', false);
+            $('#btn-pagamento1').prop('disabled', false);
+            $('#btn-pagamento2').prop('disabled', false);
+            $('#btn-pagamento3').prop('disabled', false);
+            var btnPagamento = document.getElementById("btn-pagamento");
+            document.getElementById("btn-pagamento").querySelector('.spinner-border').style.display = "none";
+        }
+        $('#btn-pagamento').prop('disabled', true);
+        $('#btn-pagamento1').prop('disabled', true);
+        $('#btn-pagamento2').prop('disabled', true);
+        $('#btn-pagamento3').prop('disabled', true);
+        document.getElementById("btn-pagamento").querySelector('.spinner-border').style.display = "inline-block";
+        function processarSelecaoFrete(cepDestino, freteSelecionado) {
+            console.log('Enviando dados para o servidor:', JSON.stringify({ 'cep_destino': cepDestino, 'frete_selecionado': freteSelecionado }));
+            // Verifica se há uma solicitação AJAX em andamento e a cancela, se houver
+            if (xhr && xhr.readyState !== 4) {
+                xhr.abort();
+            }
+
+            xhr = $.ajax({
+                url: "{% url 'processar_selecao_frete' %}",
+                type: "POST",
+                dataType: 'json',
+                headers: {
+                    'X-CSRFToken': csrftoken
+                },
+                data: JSON.stringify({ 'cep_destino': cepDestino, 'frete_selecionado': freteSelecionado }),
+                success: function (response) {
+                    if ('valor_frete' in response) {
+                        atualizarValorTotalCarrinho(response.valor_frete)
+                        console.log('Frete selecionado processado com sucesso:', response.valor_frete);
+                    } else {
+                        console.error('Erro ao processar seleção do frete:', response.error);
+                    }
+                },
+
+            });
+        }
+
+
+        function loadDeliveryOptions(cep_destino) {
+
+            xhr1 = $.ajax({
+                url: "{% url 'calcular_frete_melhor_envio' %}",
+                type: "POST",
+                contentType: "application/json",
+                headers: {
+                    'X-CSRFToken': csrftoken
+                },
+                data: JSON.stringify({ "cep_destino": cep_destino }),
+                success: function (response) {
+                    $("#delivery-options").empty();
+                    var fretesDisponiveis = response.filter(function (option) {
+                        return !option.error;
+                    });
+                    var listHtml = "<ul class='list-group'>";
+                    fretesDisponiveis.forEach(function (option, index) {
+                        listHtml += "<li class='list-group-item'>";
+                        listHtml += "<div class='form-check'>";
+                        listHtml += "<input class='form-check-input' type='radio' name='option' id='option-" + option.id + "' value='" + option.id + "'";
+                        if (index === 0) {
+                            listHtml += " checked";
+                        }
+                        listHtml += ">";
+                        listHtml += "<label class='form-check-label' for='option-" + option.id + "'>";
+                        listHtml += "<h5 class='mb-1'>" + option.name + "</h5>";
+                        listHtml += "<p class='mb-1'>Preço: " + option.currency + " " + option.price + "</p>";
+                        listHtml += "<p class='mb-1'>Tempo de entrega: " + option.delivery_time + " dias</p>";
+                        listHtml += "<img src='" + option.company.picture + "' alt='" + option.name + "' style='max-width: 100px;'>";
+                        listHtml += "</label></div>";
+                        listHtml += "</li>";
+                    });
+                    $("#delivery-options").append(listHtml);
+                    $('input[type=radio][name=option]').change(function () {
+                        // Cancela a solicitação AJAX pendente, se houver
+                        if (xhr && xhr.readyState !== 4) {
+                            xhr.abort();
+                        }
+                        var cep = "{{ perfil_usuario.cep }}";
+                        var cepValido = validarCEP(cep);
+                        var freteSelecionado = $(this).val();
+                        if (cepValido) {
+                            $('#btn-pagamento').prop('disabled', true);
+                            $('#btn-pagamento1').prop('disabled', true);
+                            $('#btn-pagamento2').prop('disabled', true);
+                            $('#btn-pagamento3').prop('disabled', true);
+                            document.getElementById("btn-pagamento").querySelector('.spinner-border').style.display = "inline-block";
+                            processarSelecaoFrete(cep, freteSelecionado);
+                        } else {
+                            console.error('CEP inválido.');
+                        }
+                    });
+
+
+
+                    var freteSelecionadoAutomaticamente = $('input[type=radio][name=option]:checked').val();
+                    processarSelecaoFrete(cep_destino, freteSelecionadoAutomaticamente);
+                },
+
+            });
+        }
+        function verificarEndereco() {
+            var rua = "{{ perfil_usuario.rua }}";
+            var numero = "{{ perfil_usuario.numero }}";
+            var bairro = "{{ perfil_usuario.bairro }}";
+            var cidade = "{{ perfil_usuario.cidade }}";
+            var estado = "{{ perfil_usuario.estado }}";
+            var cep = "{{ perfil_usuario.cep }}";
+
+            if (!rua || !numero || !bairro || !cidade || !estado || !cep) {
+
+            } else {
+
+                cepValido = validarCEP(cep);
+                if (cepValido) {
+                    loadDeliveryOptions(cep);
+                } else {
+                    $("#delivery-options").empty();
+
+                }
+            }
+        }
+        $(document).ready(function () {
+            verificarEndereco();
+        });
+    });
+
+
+
+    $('#limpar-carrinho').click(function () {
+        if (xhr && xhr.readyState !== 4) {
+            xhr.abort();
+
+        }
+        if (xhr1 && xhr1.readyState !== 4) {
+            xhr1.abort();
+
+        }
+    });
+
+</script>
 {% endblock %}
