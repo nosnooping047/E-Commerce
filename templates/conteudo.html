@@ -66,8 +66,13 @@
                             </div>
                         </div>
                     </form>
+<<<<<<< HEAD
+=======
+                
+>>>>>>> c573da7542bcb732e0086b512adccdab92581769
                     {% if user.is_authenticated %}    
                     <li class="nav-item dropdown">
+<<<<<<< HEAD
                         <a class="nav-link dropdown-toggle css-z4m310 logocab" style="font-size: 20px; font-weight: 400;" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fa-regular fa-user"></i> 
                             Olá, {{ user.username }}
@@ -76,13 +81,27 @@
                             <a class="dropdown-item" href="/UsuariosCadastroApp/minha_conta/"><i class="fa-solid fa-right-from-bracket"></i> Minha Conta</a>
                             <a class="dropdown-item" href="/UsuariosCadastroApp/minhas_compras/"><i class="fa-solid fa-right-from-bracket"></i> Minhas Compras</a>
                             <a class="dropdown-item" href="/UsuariosCadastroApp/logout/"><i class="fa-solid fa-right-from-bracket"></i> Sair</a>
+=======
+                        <a class="nav-link dropdown-toggle css-z4m310 logocab" style="font-size: 20px; font-weight: 400;" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa-regular fa-user"></i> 
+                            {{ user.username }}
+                        </a>
+                        <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+                          <a class="dropdown-item" href="/UsuariosCadastroApp/minha_conta/"><i class="fa-solid fa-right-from-bracket"></i> Minha Conta</a>
+                          <a class="dropdown-item" href="/UsuariosCadastroApp/minhas_compras/"><i class="fa-solid fa-right-from-bracket"></i> Minhas Compras</a>
+                          <a class="dropdown-item" href="/UsuariosCadastroApp/logout/"><i class="fa-solid fa-right-from-bracket"></i> Sair</a>
+>>>>>>> c573da7542bcb732e0086b512adccdab92581769
                         </div>
                     </li> 
                 {% else %}
                     <li class="nav-item dropdown">
+<<<<<<< HEAD
                         <a class="nav-link dropdown-toggle css-z4m310 logocab" style="font-size: 20px; font-weight: 400;" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fa-regular fa-user"></i> 
                             Entrar
+=======
+                        <a class="nav-link dropdown-toggle css-z4m310 logocab" style="font-size: 20px; font-weight: 400;" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa-regular fa-user"></i> 
+                             Login
+>>>>>>> c573da7542bcb732e0086b512adccdab92581769
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item" href="/UsuariosCadastroApp/logar/"><i class="fa-solid fa-user"></i> Entrar</a>

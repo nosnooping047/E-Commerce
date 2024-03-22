@@ -135,6 +135,7 @@ def minha_conta(request):
         # Se a requisição não for POST, renderize o template com os dados do perfil do usuário
         return render(request, 'minha_conta.html', {'perfil_usuario': perfil_usuario})
 
+<<<<<<< HEAD
 import requests
 from collections import Counter
 from ProdutosApp.models import Produto, Compra
@@ -198,3 +199,7 @@ def minhas_compras(request):
 
     # Renderiza o template com as compras no contexto
     return render(request, 'minhas_compras.html', {'compras': compras_do_usuario})
+=======
+def minhas_compras(request):
+    return render(request, 'minhas_compras.html')
+>>>>>>> c573da7542bcb732e0086b512adccdab92581769

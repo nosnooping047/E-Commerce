@@ -74,6 +74,7 @@
                     <div class="form-group">
                         <input type="email" class="form-control" id="form-checkout__cardholderEmail" placeholder="E-mail do Titular do Cartão" value="{{ user.email }}">
                     </div>
+<<<<<<< HEAD
                     <div class="progress" style="height: 0px;">
                       <div id="progress-bar" class="progress-bar w-0" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
                     </div>
@@ -83,6 +84,14 @@
                       <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                         Pagar
                     </button>
+=======
+                    <div class="progress">
+                      <div id="progress-bar" class="progress-bar w-0" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <br>
+                    <button type="submit" class="btn btn-primary" id="form-checkout__submit">Pagar</button>
+
+>>>>>>> c573da7542bcb732e0086b512adccdab92581769
 
                 </form>
           
@@ -101,8 +110,13 @@
     progressBar.setAttribute('aria-valuenow', progress);
   }
 
+<<<<<<< HEAD
     const urlCarrinho = "{% url 'process_payment' %}";
 
+=======
+    const urlElement = document.getElementById('url-data');
+    const urlCarrinho = urlElement.getAttribute('data-url');
+>>>>>>> c573da7542bcb732e0086b512adccdab92581769
     const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
     var valorTotal = parseFloat("{{ valor_total }}").toFixed(1);
     console.log("Valor Total:", valorTotal);
@@ -192,12 +206,19 @@
             }),
           }).then(response => {
             updateProgressBar(100);
+<<<<<<< HEAD
             document.getElementById("form-checkout__submit").querySelector('.spinner-border').style.display = "none";
+=======
+>>>>>>> c573da7542bcb732e0086b512adccdab92581769
             return response.json();
           }).then(responseData => {
             if (responseData.status === "approved") {
               console.log("Pagamento aprovado!");
+<<<<<<< HEAD
               window.location.href = "{% url 'minhas_compras' %}";
+=======
+              window.location.href = "{% url 'produtos' %}";
+>>>>>>> c573da7542bcb732e0086b512adccdab92581769
             }
           }).catch(error => {
             console.error("Erro ao processar pagamento:", error);
