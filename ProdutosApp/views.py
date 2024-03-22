@@ -111,17 +111,6 @@ def carrinho(request):
             return render(request, 'carrinho.html', {'produtos_no_carrinho': produtos_no_carrinho, 'valor_total': valor_total, 'perfil_usuario': perfil_usuario})
 
 
-
-
-
-# Melhorias de performance (otimização de consultas ao banco de dados)
-def get_cart_products(request):
-    cart_ids = request.session.get('cart', [])
-    produtos_no_carrinho = Produto.objects.filter(id__in=cart_ids)
-    return produtos_no_carrinho
-
-
-
 def statusDePagamento(request):
     try:
         id = '1321708843'
