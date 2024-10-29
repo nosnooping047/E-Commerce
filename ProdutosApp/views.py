@@ -174,7 +174,7 @@ import requests
 from django.http import JsonResponse, HttpResponse
 
 # Define a chave de acesso global
-ACCESS_TOKEN = "TEST-6261472583087320-030722-67cee6801b468dc3905e491f11041cf1-180251525"
+ACCESS_TOKEN = "TEST-6261472583087320-030722-67cee6801b468dc390591f11041cf1-180251525"
 
 def process_payment(request):
     try:
